@@ -11,6 +11,13 @@ void limpiarPantalla() {
     #endif
 }
 
+struct Heroe{
+    string name;
+    int hp;
+    int ataque;
+    int defensa;
+};
+
 struct Monstruo{
     string name;
     int hp;
@@ -53,5 +60,9 @@ int main() {
                                              0, 10);     // Defensa rango
     mostrarEstado(aleatorio);
 
+
+    while(Heroe hp >= 0){
+        
+    }
     return 0;
 }
