@@ -171,12 +171,13 @@ int main() {
           break;
       }
 
-    } else if (opcion == 2) {
-      cout << "Huyes del combate, tu vida no se ha recuperado..." << endl;
-      break;
-    } else {
-      cout << "Opción no válida." << endl;
     }
+
+    // Si el héroe murió en la ronda, termina el juego
+    if (heroe.hp <= 0) break;
+
+    cout << "Preparando siguiente enemigo..." << endl;
+    limpiarDespues(2);
   }
 
   return 0;
