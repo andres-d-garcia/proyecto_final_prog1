@@ -60,6 +60,7 @@ int aplicarDanio(int& hp, int ataque, int defensa) {
   hp -= danio;
   if (hp < 0) hp = 0; 
   cout << "-" << danio << " puntos de vida!" << endl;
+  cout << endl;
   return 0;
 }
 
@@ -128,10 +129,14 @@ int main() {
           // Héroe ataca
           cout << "Atacas al " << monstruo.name << "!" << endl;
           aplicarDanio(monstruo.hp, heroe.ataque, monstruo.defensa);
+           limpiarDespues(6);
+          cout << "-----------------------------------------" << endl;
+          mostrarEstado(heroe);
           mostrarEstado(monstruo);
+          cout << "-----------------------------------------" << endl;
           if (monstruo.hp <= 0) {
             cout << "Has derrotado al " << monstruo.name << "!" << endl;
-            // Recompensa: recuperar algo de HP
+            // recuperacion de hp por victoria
             int recupero = numeroAleatorio(5, 15);
             heroe.hp += recupero;
             cout << "Recuperas " << recupero << " HP por la victoria." << endl;
@@ -140,9 +145,14 @@ int main() {
           }
 
           // Monstruo contraataca
+          cout << endl;
           cout << monstruo.name << " contraataca!" << endl;
           aplicarDanio(heroe.hp, monstruo.ataque, heroe.defensa);
+          limpiarDespues(10);
+          cout << "-----------------------------------------" << endl;
           mostrarEstado(heroe);
+          mostrarEstado(monstruo);
+          cout << "-----------------------------------------" << endl;
           if (heroe.hp <= 0) {
             cout << "Has sido derrotado en la ronda " << ronda << "!" << endl;
             salirRonda = true;
@@ -167,7 +177,7 @@ int main() {
     if (heroe.hp <= 0) break;
 
     cout << "Preparando siguiente enemigo..." << endl;
-    limpiarDespues(2, false);
+    limpiarDespues(4);
   }
 
   cout << "\nGAME OVER. Rondas completadas: " << ronda << "\n";
