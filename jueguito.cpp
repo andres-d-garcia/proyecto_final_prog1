@@ -136,7 +136,8 @@ int main() {
       break;
     } else {
       cout << "Opción no válida." << endl;
-      cout << "Por favor, elige 1 para atacar o 2 para huir." << endl;
+      cout << "Por favor, elige algo" << endl;
+      limpiarDespues(3);
     }
   }
 
