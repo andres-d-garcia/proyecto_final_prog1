@@ -60,6 +60,7 @@ int aplicarDanio(int& hp, int ataque, int defensa) {
   hp -= danio;
   if (hp < 0) hp = 0; 
   cout << "-" << danio << " puntos de vida!" << endl;
+  cout << endl;
   return 0;
 }
 
@@ -90,45 +91,83 @@ void mostrarEstado(const Heroe& h) {
 int main() {
   limpiarPantalla();
   cout << "¡Bienvenido al jueguito de combate!" << endl;
-  // Crear héroe y monstruo
+
+  // Crear héroe
   Heroe heroe{"Heroe", 120, 25, 8};
-  Monstruo monstruo = crearMonstruoRandom("Goblin", 50, 120, 5, 25, 0, 10);
+  int ronda = 0;
 
-  cout << "-- Estado inicial -----------------" << endl;
-  mostrarEstado(heroe);
-  mostrarEstado(monstruo);
-  cout << "-----------------------------------" << endl;
+  // El juego continúa hasta que el héroe muere
+  while (heroe.hp > 0) {
+    ronda++;
+    cout << "\n=== Ronda " << ronda << " ===" << endl;
 
-  // Bucle de combate simple
-  while (monstruo.hp > 0 && heroe.hp > 0) {
-    cout << "\nElige una accion: (1) Atacar  (2) Huir : " ;
-    int opcion = 0;
-    if (!(cin >> opcion)) {
-      cout << "Entrada inválida. Saliendo." << endl;
-      break;
-    }
+    // Generar un monstruo aleatorio por ronda
+    Monstruo monstruo = crearMonstruoRandom("Goblin",
+                                           40 + numeroAleatorio(0, ronda * 5), // HP crece según la ronda
+                                           60 + numeroAleatorio(0, ronda * 5),
+                                           5 + numeroAleatorio(0, ronda * 2),  // Ataque
+                                           10 + numeroAleatorio(0, ronda * 2),
+                                           0 + numeroAleatorio(0, ronda),      // Defensa
+                                           5 + numeroAleatorio(0, ronda));
 
-    if (opcion == 1) {
-      // Héroe ataca
-      cout << "Atacas al monstruo!" << endl;
-      aplicarDanio(monstruo.hp, heroe.ataque, monstruo.defensa);
-      limpiarDespues(5);
-      mostrarEstado(heroe);
-      mostrarEstado(monstruo);
-      if (monstruo.hp <= 0) {
-        cout << "Has derrotado al monstruo!" << endl;
-        break;
+    cout << "Aparece un " << monstruo.name << "!" << endl;
+    mostrarEstado(heroe);
+    mostrarEstado(monstruo);
+
+    // Combate contra el monstruo actual
+    bool salirRonda = false;
+    while (monstruo.hp > 0 && heroe.hp > 0) {
+      cout << "\nElige una accion: (1) Atacar  (2) Huir : ";
+      int opcion = 0;
+      if (!(cin >> opcion)) {
+        cout << "Entrada inválida. Saliendo del juego." << endl;
+        return 0;
       }
 
-      // Monstruo contraataca
-      cout << "El monstruo contraataca!" << endl;
-      aplicarDanio(heroe.hp, monstruo.ataque, heroe.defensa);
-      limpiarDespues(5);
-      mostrarEstado(heroe);
-      mostrarEstado(monstruo);
-      if (heroe.hp <= 0) {
-        cout << "Has sido derrotado!" << endl;
-        break;
+      switch (opcion) {
+        case 1: {
+          // Héroe ataca
+          cout << "Atacas al " << monstruo.name << "!" << endl;
+          aplicarDanio(monstruo.hp, heroe.ataque, monstruo.defensa);
+           limpiarDespues(6);
+          cout << "-----------------------------------------" << endl;
+          mostrarEstado(heroe);
+          mostrarEstado(monstruo);
+          cout << "-----------------------------------------" << endl;
+          if (monstruo.hp <= 0) {
+            cout << "Has derrotado al " << monstruo.name << "!" << endl;
+            // recuperacion de hp por victoria
+            int recupero = numeroAleatorio(5, 15);
+            heroe.hp += recupero;
+            cout << "Recuperas " << recupero << " HP por la victoria." << endl;
+            salirRonda = true;
+            break;
+          }
+
+          // Monstruo contraataca
+          cout << endl;
+          cout << monstruo.name << " contraataca!" << endl;
+          aplicarDanio(heroe.hp, monstruo.ataque, heroe.defensa);
+          limpiarDespues(10);
+          cout << "-----------------------------------------" << endl;
+          mostrarEstado(heroe);
+          mostrarEstado(monstruo);
+          cout << "-----------------------------------------" << endl;
+          if (heroe.hp <= 0) {
+            cout << "Has sido derrotado en la ronda " << ronda << "!" << endl;
+            salirRonda = true;
+          }
+          break;
+        }
+
+        case 2:
+          cout << "Huyes del combate. Siguiente ronda." << endl;
+          salirRonda = true; // escapas pero el juego continúa
+          break;
+
+        default:
+          cout << "Opción no válida." << endl;
+          break;
       }
 
     } else if (opcion == 2) {
@@ -136,8 +175,6 @@ int main() {
       break;
     } else {
       cout << "Opción no válida." << endl;
-      cout << "Por favor, elige algo" << endl;
-      limpiarDespues(3);
     }
   }
 
