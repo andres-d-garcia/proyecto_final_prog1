@@ -167,6 +167,7 @@ int main() {
 
         default:
           cout << "Opción no válida." << endl;
+          cout << "hazlo bienn" << endl;
           break;
       }
 
